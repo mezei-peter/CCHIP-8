@@ -1,5 +1,4 @@
 #include "args_service.h"
-#include <stdio.h>
 #include <stdlib.h>
 
 ArgsService *new_args_service(char *args[], int length)
