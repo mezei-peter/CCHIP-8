@@ -10,8 +10,8 @@ sudo apt install libsdl2-dev
 ```
 
 ## Usage
-The program can be built and run with **make**:
+The program can be built and run with **make**. It requires a .ch8 **file path** as an argument in *ARGS*. I provided some example ROMS in the *roms/* directory.
 ```
 make
-make run
+make run ARGS=roms/1-chip8-logo.ch8
 ```

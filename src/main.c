@@ -7,6 +7,12 @@
 int main(int argc, char *argv[])
 {
   ArgsService *args_service = new_args_service(argv, argc);
-  printf("%s\n", args_service->file_path);
+  FILE *rom_file = fopen(args_service->file_path, "rb");
+  if (rom_file == NULL)
+  {
+    printf("Invalid file. Please pass a valid file path as an argument.\n");
+    return 1;
+  }
+
   return 0;
 }
