@@ -52,3 +52,11 @@ void cpu_load_fonts(Cpu *cpu, Memory *mem)
         mem_set_heap(mem, FONTS_ADDR + i, fonts[i]);
     }
 }
+
+void cpu_load_bin(Cpu *cpu, Memory *mem, BinaryFile *bin)
+{
+    for (int i = 0; i < bin->size; i++)
+    {
+        mem_set_heap(mem, PROGRAM_ADDR + i, bin->bytes[i]);
+    }
+}

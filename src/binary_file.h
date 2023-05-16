@@ -12,3 +12,4 @@ typedef struct BinaryFile
 
 BinaryFile *binfile_new();
 int binfile_read(BinaryFile *binary_file, char *path);
+void binfile_free(BinaryFile *binary_file);
