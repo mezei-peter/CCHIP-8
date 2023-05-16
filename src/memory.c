@@ -40,3 +40,8 @@ uint16_t mem_get_stack(Memory *mem, int sp)
 {
     return mem->stack[sp];
 }
+
+int mem_get_program_addr(Memory *mem)
+{
+    return PROGRAM_ADDR;
+}

@@ -20,3 +20,13 @@ void sys_free(System *sys)
     keyp_free(sys->keypad);
     free(sys);
 }
+
+int sys_run_bin(System *sys, BinaryFile *bin)
+{
+    int program_addr = mem_get_program_addr(sys->memory);
+    for (int i = 0; i < bin->size; i++)
+    {
+        mem_set_heap(sys->memory, program_addr + i, bin->bytes[i]);
+    }
+    return 0;
+}

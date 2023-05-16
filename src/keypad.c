@@ -5,6 +5,7 @@
 Keypad *keyp_new()
 {
     Keypad *keyp = malloc(sizeof(Keypad));
+    return keyp;
 }
 
 void keyp_free(Keypad *keyp)
