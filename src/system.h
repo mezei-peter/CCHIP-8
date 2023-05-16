@@ -14,3 +14,4 @@ typedef struct System
 } System;
 
 System *sys_new(Cpu *cpu, Memory *memory, Screen *screen, Keypad *keypad);
+void sys_free(System *sys);
