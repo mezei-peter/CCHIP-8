@@ -1,5 +1,5 @@
 build:
-	gcc -Wall -std=c17 ./src/*c -o ./target/emulator
+	gcc -Wall -std=c17 ./src/*c -lSDL2 -o ./target/emulator
 
 run:
 	./target/emulator $(ARGS)

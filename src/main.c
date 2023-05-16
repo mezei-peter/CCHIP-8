@@ -19,13 +19,18 @@ int main(int argc, char *argv[])
   case -1:
     printf("Error: Invalid file. Please input a valid file.\n");
     return -1;
-  
+
   case -2:
     printf("Error: empty file.\n");
     return -2;
   }
-
-  System *sys = sys_new(cpu_new(), mem_new(), scrn_new(), keyp_new());
+  Screen *scrn = scrn_new();
+  if (scrn == NULL)
+  {
+    fprintf(stderr, "Unable to initialize Screen.\n");
+    return -3;
+  }
+  System *sys = sys_new(cpu_new(), mem_new(), scrn, keyp_new());
   int status = sys_run_bin(sys, bin_file);
   sys_free(sys);
   return status;
