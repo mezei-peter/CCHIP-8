@@ -4,6 +4,7 @@
 
 #include "args_service.h"
 #include "binary_file.h"
+#include "memory.h"
 
 int main(int argc, char *argv[])
 {

@@ -17,7 +17,6 @@ Cpu *cpu_new()
     cpu->nnn = 0;
     for (int i = 0; i < sizeof(cpu->var_regs) / sizeof(cpu->var_regs[0]); i++)
     {
-        printf("%d\n", i);
         cpu->var_regs[i] = 0;
     }
     return cpu;

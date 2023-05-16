@@ -1,4 +1,5 @@
 #include "memory.h"
+#include <stdlib.h>
 
 Memory *mem_new()
 {
