@@ -2,9 +2,11 @@
 
 #include <stdint.h>
 #include "memory.h"
+#include "binary_file.h"
 
-#define FONT_SIZE 5
+#define PROGRAM_ADDR 0x200
 #define FONTS_ADDR 0x050
+#define FONT_SIZE 5
 
 typedef struct Cpu
 {
@@ -24,3 +26,4 @@ typedef struct Cpu
 Cpu *cpu_new();
 void cpu_free(Cpu *cpu);
 void cpu_load_fonts(Cpu *cpu, Memory *mem);
+void cpu_load_bin(Cpu *cpu, Memory *mem, BinaryFile *bin);

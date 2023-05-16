@@ -44,12 +44,8 @@ bool sys_quit_event(System *sys)
 
 int sys_run_bin(System *sys, BinaryFile *bin)
 {
-    int program_addr = mem_get_program_addr(sys->memory);
-    for (int i = 0; i < bin->size; i++)
-    {
-        mem_set_heap(sys->memory, program_addr + i, bin->bytes[i]);
-    }
     cpu_load_fonts(sys->cpu, sys->memory);
+    cpu_load_bin(sys->cpu, sys->memory, bin);
 
     bool running = true;
     while (running)
