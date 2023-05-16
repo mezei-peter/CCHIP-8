@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <string.h>
-#include <SDL2/SDL.h>
 
 #include "args_service.h"
 #include "binary_file.h"
