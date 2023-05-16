@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <stdio.h>
 
 typedef struct Cpu
 {
@@ -16,3 +17,5 @@ typedef struct Cpu
     uint8_t nn;
     uint16_t nnn;
 } Cpu;
+
+Cpu *cpu_new();
