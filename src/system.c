@@ -1,5 +1,4 @@
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "system.h"
 
@@ -22,6 +21,27 @@ void sys_free(System *sys)
     free(sys);
 }
 
+bool sys_quit_event(System *sys)
+{
+    SDL_Event event;
+    while (SDL_PollEvent(&event))
+    {
+        switch (event.type)
+        {
+        case SDL_QUIT:
+            return true;
+        case SDL_KEYDOWN:
+            if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
+            {
+                return true;
+            }
+        default:
+            break;
+        }
+    }
+    return false;
+}
+
 int sys_run_bin(System *sys, BinaryFile *bin)
 {
     int program_addr = mem_get_program_addr(sys->memory);
@@ -34,24 +54,7 @@ int sys_run_bin(System *sys, BinaryFile *bin)
     bool running = true;
     while (running)
     {
-        SDL_Event event;
-        while (SDL_PollEvent(&event))
-        {
-            switch (event.type)
-            {
-            case SDL_QUIT:
-                running = false;
-                break;
-            case SDL_KEYDOWN:
-                if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
-                {
-                    running = false;
-                }
-                break;
-            default:
-                break;
-            }
-        }
+        running = !sys_quit_event(sys);
     }
     return 0;
 }

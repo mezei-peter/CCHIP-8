@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include "cpu.h"
 #include "memory.h"
 #include "screen.h"
