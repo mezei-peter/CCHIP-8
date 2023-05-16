@@ -3,7 +3,6 @@
 #include <stdint.h>
 
 #define PROGRAM_ADDR 0x200
-#define FONTS_ADDR 0x050
 #define HEAP_SIZE 4096
 #define STACK_SIZE 16
 

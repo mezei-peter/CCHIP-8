@@ -28,5 +28,6 @@ int sys_run_bin(System *sys, BinaryFile *bin)
     {
         mem_set_heap(sys->memory, program_addr + i, bin->bytes[i]);
     }
+    cpu_load_fonts(sys->cpu, sys->memory);
     return 0;
 }

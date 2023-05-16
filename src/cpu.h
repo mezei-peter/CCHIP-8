@@ -1,6 +1,10 @@
 #pragma once
 
 #include <stdint.h>
+#include "memory.h"
+
+#define FONT_SIZE 5
+#define FONTS_ADDR 0x050
 
 typedef struct Cpu
 {
@@ -19,3 +23,4 @@ typedef struct Cpu
 
 Cpu *cpu_new();
 void cpu_free(Cpu *cpu);
+void cpu_load_fonts(Cpu *cpu, Memory *mem);
