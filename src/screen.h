@@ -11,7 +11,7 @@
 typedef struct Screen
 {
     SDL_Window *window;
-    SDL_Renderer *renderer;
+    SDL_Surface *surface;
 } Screen;
 
 Screen *scrn_new();

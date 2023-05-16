@@ -7,7 +7,7 @@ Screen *scrn_new()
 {
 
     SDL_Window *window = NULL;
-    SDL_Renderer *renderer = NULL;
+    SDL_Surface *surface = NULL;
 
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
@@ -22,18 +22,17 @@ Screen *scrn_new()
         fprintf(stderr, "could not create window: %s\n", SDL_GetError());
         return NULL;
     }
-    renderer = SDL_GetRenderer(window);
-    SDL_SetRenderDrawColor(renderer, COLOR_OFF);
-    SDL_RenderPresent(renderer);
+    surface = SDL_GetWindowSurface(window);
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, COLOR_OFF));
+    SDL_UpdateWindowSurface(window);
     Screen *scrn = malloc(sizeof(Screen));
     scrn->window = window;
-    scrn->renderer = renderer;
+    scrn->surface = surface;
     return scrn;
 }
 
 void scrn_free(Screen *scrn)
 {
-    SDL_DestroyRenderer(scrn->renderer);
     SDL_DestroyWindow(scrn->window);
     free(scrn);
 }
