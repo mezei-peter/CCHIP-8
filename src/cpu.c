@@ -21,3 +21,8 @@ Cpu *cpu_new()
     }
     return cpu;
 }
+
+void cpu_free(Cpu *cpu)
+{
+    free(cpu);
+}

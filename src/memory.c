@@ -16,6 +16,11 @@ Memory *mem_new()
     return mem;
 }
 
+void mem_free(Memory *mem)
+{
+    free(mem);
+}
+
 uint8_t mem_get_heap(Memory *mem, int i)
 {
     return mem->heap[i];

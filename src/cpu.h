@@ -18,3 +18,4 @@ typedef struct Cpu
 } Cpu;
 
 Cpu *cpu_new();
+void cpu_free(Cpu *cpu);
