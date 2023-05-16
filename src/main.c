@@ -4,6 +4,11 @@
 
 #include "args_service.h"
 #include "binary_file.h"
+#include "system.h"
+#include "cpu.h"
+#include "memory.h"
+#include "screen.h"
+#include "keypad.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,5 +25,8 @@ int main(int argc, char *argv[])
     return -2;
   }
 
-  return 0;
+  System *sys = sys_new(cpu_new(), mem_new(), scrn_new(), keyp_new());
+  int status = sys_run_bin(sys, bin_file);
+  sys_free(sys);
+  return status;
 }
