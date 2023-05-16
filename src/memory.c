@@ -1,5 +1,6 @@
 #include "memory.h"
 #include <stdlib.h>
+#include <stdint.h>
 
 Memory *mem_new()
 {
@@ -13,4 +14,24 @@ Memory *mem_new()
         mem->stack[i] = 0;
     }
     return mem;
+}
+
+uint8_t mem_get_heap(Memory *mem, int i)
+{
+    return mem->heap[i];
+}
+
+void mem_set_heap(Memory *mem, int i, uint8_t val)
+{
+    mem->heap[i] = val;
+}
+
+void mem_set_stack(Memory *mem, int sp, uint16_t val)
+{
+    mem->stack[sp] = val;
+}
+
+uint16_t mem_get_stack(Memory *mem, int sp)
+{
+    return mem->stack[sp];
 }
