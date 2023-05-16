@@ -1,5 +1,9 @@
 # CCHIP-8
 
+⚠️Work in progress⚠️
+
+My other CHIP-8 emulator project (in Rust): https://github.com/mezei-peter/RCHIP-8
+
 ## Requirements
 The project is mainly designed for a GNU/Linux system. It requires **gcc**, **make** and the **sdl2** library. On Ubuntu run these commands to install them:
 ```
