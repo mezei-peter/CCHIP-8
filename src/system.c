@@ -46,6 +46,7 @@ int sys_run_bin(System *sys, BinaryFile *bin)
 {
     cpu_load_fonts(sys->cpu, sys->memory);
     cpu_load_bin(sys->cpu, sys->memory, bin);
+    binfile_free(bin);
 
     bool running = true;
     while (running)

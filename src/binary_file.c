@@ -36,3 +36,9 @@ int binfile_read(BinaryFile *binary_file, char *path)
     fclose(file);
     return 0;
 }
+
+void binfile_free(BinaryFile *binary_file)
+{
+    free(binary_file->bytes);
+    free(binary_file);
+}
