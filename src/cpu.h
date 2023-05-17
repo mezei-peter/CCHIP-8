@@ -13,7 +13,7 @@
 typedef enum
 {
     OPCODE_0NNN,
-    OPCODE_0E00,
+    OPCODE_00E0,
     OPCODE_00EE,
     OPCODE_1NNN,
     OPCODE_2NNN,

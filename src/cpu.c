@@ -70,6 +70,41 @@ uint16_t cpu_fetch(Cpu *cpu, Memory *mem)
     return block;
 }
 
+uint16_t cpu_make_nnn(uint16_t block)
+{
+    return block & 0x0FFF;
+}
+
+Opcode cpu_decode_0(Cpu *cpu, uint16_t block)
+{
+    if (block == 0x00EE)
+    {
+        return OPCODE_00EE;
+    }
+    if (block == 0x00E0)
+    {
+        return OPCODE_00E0;
+    }
+    cpu->nnn = cpu_make_nnn(block);
+    return OPCODE_0NNN;
+}
+
+Opcode cpu_decode(Cpu *cpu, uint16_t block)
+{
+    uint8_t first_nibble = (uint8_t)(block >> 12);
+    switch (first_nibble)
+    {
+    case 0:
+        return cpu_decode_0(cpu, block);
+    // TODO
+    // .
+    // .
+    // .
+    default:
+        return OPCODE_INVALID;
+    }
+}
+
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
     uint16_t block = cpu_fetch(cpu, mem);
