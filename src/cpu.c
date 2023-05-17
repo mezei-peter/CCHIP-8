@@ -142,7 +142,16 @@ Opcode cpu_decode_8(Cpu *cpu, uint16_t block)
 
 Opcode cpu_decode_e(Cpu *cpu, uint16_t block)
 {
-    // TODO
+    if ((block & 0xF0FF) == 0xE09E)
+    {
+        cpu->x = cpu_make_x(block);
+        return OPCODE_EX9E;
+    }
+    if ((block & 0xF0FF) == 0xE0A1)
+    {
+        cpu->x = cpu_make_x(block);
+        return OPCODE_EXA1;
+    }
     return OPCODE_INVALID;
 }
 
