@@ -51,6 +51,7 @@ int sys_run_bin(System *sys, BinaryFile *bin)
     bool running = true;
     while (running)
     {
+        cpu_cycle(sys->cpu, sys->memory, sys->screen, sys->keypad);
         running = !sys_quit_event(sys);
     }
     return 0;
