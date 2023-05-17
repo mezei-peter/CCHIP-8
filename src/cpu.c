@@ -109,6 +109,24 @@ Opcode cpu_decode_0(Cpu *cpu, uint16_t block)
     return OPCODE_0NNN;
 }
 
+Opcode cpu_decode_8(Cpu *cpu, uint16_t block)
+{
+    //TODO
+    return OPCODE_INVALID;
+}
+
+Opcode cpu_decode_e(Cpu *cpu, uint16_t block)
+{
+    //TODO
+    return OPCODE_INVALID;
+}
+
+Opcode cpu_decode_f(Cpu *cpu, uint16_t block)
+{
+    //TODO
+    return OPCODE_INVALID;
+}
+
 Opcode cpu_decode(Cpu *cpu, uint16_t block)
 {
     uint8_t first_nibble = (uint8_t)(block >> 12);
@@ -147,7 +165,7 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
         cpu->nn = cpu_make_nn(block);
         return OPCODE_7XNN;
     case 8:
-        return; // TODO
+        return cpu_decode_8(cpu, block);
     case 9:
         if ((block & 0x000F) != 0)
         {
@@ -159,10 +177,22 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
     case 0xA:
         cpu->nnn = cpu_make_nnn(block);
         return OPCODE_ANNN;
-    // TODO
-    // .
-    // .
-    // .
+    case 0xB:
+        cpu->nnn = cpu_make_nnn(block);
+        return OPCODE_BNNN;
+    case 0xC:
+        cpu->x = cpu_make_x(block);
+        cpu->nn = cpu_make_nn(block);
+        return OPCODE_CXNN;
+    case 0xD:
+        cpu->x = cpu_make_x(block);
+        cpu->y = cpu_make_y(block);
+        cpu->n = cpu_make_n(block);
+        return OPCODE_DXYN;
+    case 0xE:
+        return cpu_decode_e(cpu, block);
+    case 0xF:
+        return cpu_decode_f(cpu, block);
     default:
         return OPCODE_INVALID;
     }
