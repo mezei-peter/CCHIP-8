@@ -65,7 +65,7 @@ uint16_t cpu_fetch(Cpu *cpu, Memory *mem)
 {
     uint8_t byte_1 = mem->heap[cpu->pc];
     uint8_t byte_2 = mem->heap[cpu->pc + 1];
-    uint16_t block = ((uint16_t) byte_1 << 8) + (uint16_t) byte_2;
+    uint16_t block = ((uint16_t)byte_1 << 8) + (uint16_t)byte_2;
     cpu->pc += 2;
     return block;
 }
