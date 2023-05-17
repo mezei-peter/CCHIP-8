@@ -8,7 +8,7 @@ Cpu *cpu_new()
     cpu->idx_reg = 0;
     cpu->dly_tmr = 0;
     cpu->snd_tmr = 0;
-    cpu->pc = 0;
+    cpu->pc = PROGRAM_ADDR;
     cpu->sp = 0;
     cpu->x = 0;
     cpu->y = 0;
@@ -61,6 +61,16 @@ void cpu_load_bin(Cpu *cpu, Memory *mem, BinaryFile *bin)
     }
 }
 
+uint16_t cpu_fetch(Cpu *cpu, Memory *mem)
+{
+    uint8_t byte_1 = mem->heap[cpu->pc];
+    uint8_t byte_2 = mem->heap[cpu->pc + 1];
+    uint16_t block = ((uint16_t) byte_1 << 8) + (uint16_t) byte_2;
+    cpu->pc += 2;
+    return block;
+}
+
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
+    uint16_t block = cpu_fetch(cpu, mem);
 }
