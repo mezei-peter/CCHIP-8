@@ -70,6 +70,26 @@ uint16_t cpu_fetch(Cpu *cpu, Memory *mem)
     return block;
 }
 
+uint8_t cpu_make_x(uint16_t block)
+{
+    return (uint8_t)((block & 0x0F00) >> 8);
+}
+
+uint8_t cpu_make_y(uint16_t block)
+{
+    return (((uint8_t)block) & 0xF0) >> 4;
+}
+
+uint8_t cpu_make_n(uint16_t block)
+{
+    return (((uint8_t)block) & 0x0F);
+}
+
+uint8_t cpu_make_nn(uint16_t block)
+{
+    return (uint8_t)block;
+}
+
 uint16_t cpu_make_nnn(uint16_t block)
 {
     return block & 0x0FFF;
@@ -96,6 +116,49 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
     {
     case 0:
         return cpu_decode_0(cpu, block);
+    case 1:
+        cpu->nnn = cpu_make_nnn(block);
+        return OPCODE_1NNN;
+    case 2:
+        cpu->nnn = cpu_make_nnn(block);
+        return OPCODE_2NNN;
+    case 3:
+        cpu->x = cpu_make_x(block);
+        cpu->nn = cpu_make_nn(block);
+        return OPCODE_3XNN;
+    case 4:
+        cpu->x = cpu_make_x(block);
+        cpu->nn = cpu_make_nn(block);
+        return OPCODE_4XNN;
+    case 5:
+        if ((block & 0x000F) != 0)
+        {
+            return OPCODE_INVALID;
+        }
+        cpu->x = cpu_make_x(block);
+        cpu->y = cpu_make_y(block);
+        return OPCODE_5XY0;
+    case 6:
+        cpu->x = cpu_make_x(block);
+        cpu->nn = cpu_make_nn(block);
+        return OPCODE_6XNN;
+    case 7:
+        cpu->x = cpu_make_x(block);
+        cpu->nn = cpu_make_nn(block);
+        return OPCODE_7XNN;
+    case 8:
+        return; // TODO
+    case 9:
+        if ((block & 0x000F) != 0)
+        {
+            return OPCODE_INVALID;
+        }
+        cpu->x = cpu_make_x(block);
+        cpu->y = cpu_make_y(block);
+        return OPCODE_9XY0;
+    case 0xA:
+        cpu->nnn = cpu_make_nnn(block);
+        return OPCODE_ANNN;
     // TODO
     // .
     // .
