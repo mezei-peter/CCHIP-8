@@ -2,6 +2,8 @@
 
 #include <stdint.h>
 #include "memory.h"
+#include "screen.h"
+#include "keypad.h"
 #include "binary_file.h"
 
 #define PROGRAM_ADDR 0x200
@@ -27,3 +29,4 @@ Cpu *cpu_new();
 void cpu_free(Cpu *cpu);
 void cpu_load_fonts(Cpu *cpu, Memory *mem);
 void cpu_load_bin(Cpu *cpu, Memory *mem, BinaryFile *bin);
+void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp);

@@ -60,3 +60,7 @@ void cpu_load_bin(Cpu *cpu, Memory *mem, BinaryFile *bin)
         mem_set_heap(mem, PROGRAM_ADDR + i, bin->bytes[i]);
     }
 }
+
+void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
+{
+}
