@@ -111,19 +111,44 @@ Opcode cpu_decode_0(Cpu *cpu, uint16_t block)
 
 Opcode cpu_decode_8(Cpu *cpu, uint16_t block)
 {
-    //TODO
-    return OPCODE_INVALID;
+    uint8_t last_nibble = ((uint8_t)block) & 0x0F;
+    cpu->x = cpu_make_x(block);
+    cpu->y = cpu_make_y(block);
+    cpu->n = cpu_make_n(block);
+    switch (last_nibble)
+    {
+    case 0:
+        return OPCODE_8XY0;
+    case 1:
+        return OPCODE_8XY1;
+    case 2:
+        return OPCODE_8XY2;
+    case 3:
+        return OPCODE_8XY3;
+    case 4:
+        return OPCODE_8XY4;
+    case 5:
+        return OPCODE_8XY5;
+    case 6:
+        return OPCODE_8XY6;
+    case 7:
+        return OPCODE_8XY7;
+    case 0xE:
+        return OPCODE_8XYE;
+    default:
+        return OPCODE_INVALID;
+    }
 }
 
 Opcode cpu_decode_e(Cpu *cpu, uint16_t block)
 {
-    //TODO
+    // TODO
     return OPCODE_INVALID;
 }
 
 Opcode cpu_decode_f(Cpu *cpu, uint16_t block)
 {
-    //TODO
+    // TODO
     return OPCODE_INVALID;
 }
 
