@@ -157,8 +157,31 @@ Opcode cpu_decode_e(Cpu *cpu, uint16_t block)
 
 Opcode cpu_decode_f(Cpu *cpu, uint16_t block)
 {
-    // TODO
-    return OPCODE_INVALID;
+    cpu->x = cpu_make_x(block);
+    uint8_t second_byte = (uint8_t)block;
+    switch (second_byte)
+    {
+    case 0x07:
+        return OPCODE_FX07;
+    case 0x0A:
+        return OPCODE_FX0A;
+    case 0x15:
+        return OPCODE_FX15;
+    case 0x18:
+        return OPCODE_FX18;
+    case 0x1E:
+        return OPCODE_FX1E;
+    case 0x29:
+        return OPCODE_FX29;
+    case 0x33:
+        return OPCODE_FX33;
+    case 0x55:
+        return OPCODE_FX55;
+    case 0x65:
+        return OPCODE_FX65;
+    default:
+        return OPCODE_INVALID;
+    }
 }
 
 Opcode cpu_decode(Cpu *cpu, uint16_t block)
