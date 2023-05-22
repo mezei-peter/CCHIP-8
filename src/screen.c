@@ -36,3 +36,10 @@ void scrn_free(Screen *scrn)
     SDL_DestroyWindow(scrn->window);
     free(scrn);
 }
+
+void scrn_clear(Screen *scrn)
+{
+    SDL_Surface *surface = scrn->surface;
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, COLOR_OFF));
+    SDL_UpdateWindowSurface(scrn->window);
+}

@@ -16,3 +16,4 @@ typedef struct Screen
 
 Screen *scrn_new();
 void scrn_free(Screen *scrn);
+void scrn_clear(Screen *scrn);

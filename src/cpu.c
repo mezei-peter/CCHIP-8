@@ -260,6 +260,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     switch (opcode)
     {
     case OPCODE_00E0:
+        scrn_clear(scrn);
         break;
     case OPCODE_00EE:
         break;
