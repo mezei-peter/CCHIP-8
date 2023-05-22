@@ -255,6 +255,43 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
     }
 }
 
+void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
+{
+    uint8_t x = cpu->var_regs[cpu->x] % SCREEN_WIDTH;
+    uint8_t y = cpu->var_regs[cpu->y] % SCREEN_HEIGHT;
+    cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+
+    for (int i = 0; i < cpu->n; i++)
+    {
+        uint8_t sprite_byte = mem_get_heap(mem, cpu->idx_reg + i);
+        for (int j = 0; j < 8; j++)
+        {
+            bool bit = ((sprite_byte & 0x80) >> 7) == 1;
+            bool px_bit = scrn_get_px(scrn, (size_t)x, (size_t)y);
+            if (bit && px_bit)
+            {
+                scrn_erase_px(scrn, (size_t)x, (size_t)y);
+                cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+            }
+            if (bit && !px_bit)
+            {
+                scrn_draw_px(scrn, (size_t)x, (size_t)y);
+            }
+            if (x == SCREEN_WIDTH - 1)
+            {
+                break;
+            }
+            x++;
+            sprite_byte <<= 1;
+        }
+        if (y == SCREEN_HEIGHT - 1)
+        {
+            break;
+        }
+        y++;
+    }
+}
+
 void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
 {
     switch (opcode)
@@ -311,6 +348,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_CXNN:
         break;
     case OPCODE_DXYN:
+        cpu_draw(cpu, mem, scrn);
         break;
     case OPCODE_EX9E:
         break;

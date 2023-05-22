@@ -9,6 +9,7 @@
 #define PROGRAM_ADDR 0x200
 #define FONTS_ADDR 0x050
 #define FONT_SIZE 5
+#define VAR_REG_COUNT 16
 
 typedef enum
 {
@@ -52,7 +53,7 @@ typedef enum
 
 typedef struct Cpu
 {
-    uint8_t var_regs[16];
+    uint8_t var_regs[VAR_REG_COUNT];
     uint16_t idx_reg;
     uint8_t dly_tmr;
     uint8_t snd_tmr;

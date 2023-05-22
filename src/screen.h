@@ -19,3 +19,6 @@ typedef struct Screen
 Screen *scrn_new();
 void scrn_free(Screen *scrn);
 void scrn_clear(Screen *scrn);
+bool scrn_get_px(Screen *scrn, size_t x, size_t y);
+void scrn_draw_px(Screen *scrn, size_t x, size_t y);
+void scrn_erase_px(Screen *scrn, size_t x, size_t y);

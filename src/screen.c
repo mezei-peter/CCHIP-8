@@ -56,3 +56,15 @@ void scrn_clear(Screen *scrn)
     scrn_pixels_clear(scrn);
     SDL_UpdateWindowSurface(scrn->window);
 }
+
+bool scrn_get_px(Screen *scrn, size_t x, size_t y)
+{
+    return scrn->pixels[x][y];
+}
+
+void scrn_draw_px(Screen *scrn, size_t x, size_t y)
+{
+}
+void scrn_erase_px(Screen *scrn, size_t x, size_t y)
+{
+}
