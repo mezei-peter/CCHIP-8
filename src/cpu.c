@@ -267,6 +267,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_0NNN:
         break;
     case OPCODE_1NNN:
+        cpu->pc = cpu->nnn;
         break;
     case OPCODE_2NNN:
         break;
@@ -277,8 +278,10 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_5XY0:
         break;
     case OPCODE_6XNN:
+        cpu->var_regs[cpu->x] = cpu->nn;
         break;
     case OPCODE_7XNN:
+        cpu->var_regs[cpu->x] += cpu->nn;
         break;
     case OPCODE_8XY0:
         break;
@@ -301,6 +304,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_9XY0:
         break;
     case OPCODE_ANNN:
+        cpu->idx_reg = cpu->nnn;
         break;
     case OPCODE_BNNN:
         break;
