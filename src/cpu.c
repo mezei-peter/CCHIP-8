@@ -255,7 +255,88 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
     }
 }
 
+void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
+{
+    switch (opcode)
+    {
+    case OPCODE_00E0:
+        break;
+    case OPCODE_00EE:
+        break;
+    case OPCODE_0NNN:
+        break;
+    case OPCODE_1NNN:
+        break;
+    case OPCODE_2NNN:
+        break;
+    case OPCODE_3XNN:
+        break;
+    case OPCODE_4XNN:
+        break;
+    case OPCODE_5XY0:
+        break;
+    case OPCODE_6XNN:
+        break;
+    case OPCODE_7XNN:
+        break;
+    case OPCODE_8XY0:
+        break;
+    case OPCODE_8XY1:
+        break;
+    case OPCODE_8XY2:
+        break;
+    case OPCODE_8XY3:
+        break;
+    case OPCODE_8XY4:
+        break;
+    case OPCODE_8XY5:
+        break;
+    case OPCODE_8XY6:
+        break;
+    case OPCODE_8XY7:
+        break;
+    case OPCODE_8XYE:
+        break;
+    case OPCODE_9XY0:
+        break;
+    case OPCODE_ANNN:
+        break;
+    case OPCODE_BNNN:
+        break;
+    case OPCODE_CXNN:
+        break;
+    case OPCODE_DXYN:
+        break;
+    case OPCODE_EX9E:
+        break;
+    case OPCODE_EXA1:
+        break;
+    case OPCODE_FX07:
+        break;
+    case OPCODE_FX0A:
+        break;
+    case OPCODE_FX15:
+        break;
+    case OPCODE_FX18:
+        break;
+    case OPCODE_FX1E:
+        break;
+    case OPCODE_FX29:
+        break;
+    case OPCODE_FX33:
+        break;
+    case OPCODE_FX55:
+        break;
+    case OPCODE_FX65:
+        break;
+    default:
+        break;
+    }
+}
+
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
     uint16_t block = cpu_fetch(cpu, mem);
+    Opcode opcode = cpu_decode(cpu, block);
+    cpu_execute(cpu, mem, scrn, keyp, opcode);
 }
