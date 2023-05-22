@@ -257,12 +257,12 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
 
 void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
 {
-    uint8_t x = cpu->var_regs[cpu->x] % SCREEN_WIDTH;
     uint8_t y = cpu->var_regs[cpu->y] % SCREEN_HEIGHT;
     cpu->var_regs[VAR_REG_COUNT - 1] = 0;
 
     for (int i = 0; i < cpu->n; i++)
     {
+        uint8_t x = cpu->var_regs[cpu->x] % SCREEN_WIDTH;
         uint8_t sprite_byte = mem_get_heap(mem, cpu->idx_reg + i);
         for (int j = 0; j < 8; j++)
         {
@@ -270,12 +270,12 @@ void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
             bool px_bit = scrn_get_px(scrn, (size_t)x, (size_t)y);
             if (bit && px_bit)
             {
-                scrn_erase_px(scrn, (size_t)x, (size_t)y);
+                scrn_draw_px(scrn, (size_t)x, (size_t)y, false);
                 cpu->var_regs[VAR_REG_COUNT - 1] = 1;
             }
             if (bit && !px_bit)
             {
-                scrn_draw_px(scrn, (size_t)x, (size_t)y);
+                scrn_draw_px(scrn, (size_t)x, (size_t)y, true);
             }
             if (x == SCREEN_WIDTH - 1)
             {

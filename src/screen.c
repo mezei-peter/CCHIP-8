@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "screen.h"
 
@@ -62,9 +63,23 @@ bool scrn_get_px(Screen *scrn, size_t x, size_t y)
     return scrn->pixels[x][y];
 }
 
-void scrn_draw_px(Screen *scrn, size_t x, size_t y)
+void scrn_draw_px(Screen *scrn, size_t x, size_t y, bool is_on)
 {
-}
-void scrn_erase_px(Screen *scrn, size_t x, size_t y)
-{
+    scrn->pixels[x][y] = is_on;
+    x *= SCREEN_PX_SIZE;
+    y *= SCREEN_PX_SIZE;
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    rect.w = SCREEN_PX_SIZE;
+    rect.h = SCREEN_PX_SIZE;
+    if (is_on)
+    {
+        SDL_FillRect(scrn->surface, &rect, SDL_MapRGBA(scrn->surface->format, COLOR_ON));
+    }
+    else
+    {
+        SDL_FillRect(scrn->surface, &rect, SDL_MapRGBA(scrn->surface->format, COLOR_OFF));
+    }
+    SDL_UpdateWindowSurface(scrn->window);
 }
