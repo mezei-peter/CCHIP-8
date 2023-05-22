@@ -3,6 +3,27 @@
 
 #include "screen.h"
 
+void scrn_pixels_clear(Screen *scrn)
+{
+    for (int i = 0; i < SCREEN_WIDTH; i++)
+    {
+        for (int j = 0; j < SCREEN_HEIGHT; j++)
+        {
+            scrn->pixels[i][j] = false;
+        }
+    }
+}
+
+bool **scrn_pixels_init()
+{
+    bool **pixels = calloc(SCREEN_WIDTH, sizeof(bool *));
+    for (int i = 0; i < SCREEN_WIDTH; i++)
+    {
+        pixels[i] = (bool *)calloc(SCREEN_HEIGHT, sizeof(bool));
+    }
+    return pixels;
+}
+
 Screen *scrn_new()
 {
 
@@ -28,12 +49,19 @@ Screen *scrn_new()
     Screen *scrn = malloc(sizeof(Screen));
     scrn->window = window;
     scrn->surface = surface;
+    scrn->pixels = scrn_pixels_init();
+    scrn_pixels_clear(scrn);
     return scrn;
 }
 
 void scrn_free(Screen *scrn)
 {
     SDL_DestroyWindow(scrn->window);
+    for (int i = 0; i < SCREEN_WIDTH; i++)
+    {
+        free(scrn->pixels[i]);
+    }
+    free(scrn->pixels);
     free(scrn);
 }
 
@@ -41,5 +69,6 @@ void scrn_clear(Screen *scrn)
 {
     SDL_Surface *surface = scrn->surface;
     SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, COLOR_OFF));
+    scrn_pixels_clear(scrn);
     SDL_UpdateWindowSurface(scrn->window);
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 
 #define SCREEN_WIDTH 64
@@ -12,6 +13,7 @@ typedef struct Screen
 {
     SDL_Window *window;
     SDL_Surface *surface;
+    bool **pixels;
 } Screen;
 
 Screen *scrn_new();
