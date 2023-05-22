@@ -255,7 +255,131 @@ Opcode cpu_decode(Cpu *cpu, uint16_t block)
     }
 }
 
+void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
+{
+    uint8_t y = cpu->var_regs[cpu->y] % SCREEN_HEIGHT;
+    cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+
+    for (int i = 0; i < cpu->n; i++)
+    {
+        uint8_t x = cpu->var_regs[cpu->x] % SCREEN_WIDTH;
+        uint8_t sprite_byte = mem_get_heap(mem, cpu->idx_reg + i);
+        for (int j = 0; j < 8; j++)
+        {
+            bool bit = ((sprite_byte & 0x80) >> 7) == 1;
+            bool px_bit = scrn_get_px(scrn, (size_t)x, (size_t)y);
+            if (bit && px_bit)
+            {
+                scrn_draw_px(scrn, (size_t)x, (size_t)y, false);
+                cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+            }
+            if (bit && !px_bit)
+            {
+                scrn_draw_px(scrn, (size_t)x, (size_t)y, true);
+            }
+            if (x == SCREEN_WIDTH - 1)
+            {
+                break;
+            }
+            x++;
+            sprite_byte <<= 1;
+        }
+        if (y == SCREEN_HEIGHT - 1)
+        {
+            break;
+        }
+        y++;
+    }
+}
+
+void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
+{
+    switch (opcode)
+    {
+    case OPCODE_00E0:
+        scrn_clear(scrn);
+        break;
+    case OPCODE_00EE:
+        break;
+    case OPCODE_0NNN:
+        break;
+    case OPCODE_1NNN:
+        cpu->pc = cpu->nnn;
+        break;
+    case OPCODE_2NNN:
+        break;
+    case OPCODE_3XNN:
+        break;
+    case OPCODE_4XNN:
+        break;
+    case OPCODE_5XY0:
+        break;
+    case OPCODE_6XNN:
+        cpu->var_regs[cpu->x] = cpu->nn;
+        break;
+    case OPCODE_7XNN:
+        cpu->var_regs[cpu->x] += cpu->nn;
+        break;
+    case OPCODE_8XY0:
+        break;
+    case OPCODE_8XY1:
+        break;
+    case OPCODE_8XY2:
+        break;
+    case OPCODE_8XY3:
+        break;
+    case OPCODE_8XY4:
+        break;
+    case OPCODE_8XY5:
+        break;
+    case OPCODE_8XY6:
+        break;
+    case OPCODE_8XY7:
+        break;
+    case OPCODE_8XYE:
+        break;
+    case OPCODE_9XY0:
+        break;
+    case OPCODE_ANNN:
+        cpu->idx_reg = cpu->nnn;
+        break;
+    case OPCODE_BNNN:
+        break;
+    case OPCODE_CXNN:
+        break;
+    case OPCODE_DXYN:
+        cpu_draw(cpu, mem, scrn);
+        break;
+    case OPCODE_EX9E:
+        break;
+    case OPCODE_EXA1:
+        break;
+    case OPCODE_FX07:
+        break;
+    case OPCODE_FX0A:
+        break;
+    case OPCODE_FX15:
+        break;
+    case OPCODE_FX18:
+        break;
+    case OPCODE_FX1E:
+        break;
+    case OPCODE_FX29:
+        break;
+    case OPCODE_FX33:
+        break;
+    case OPCODE_FX55:
+        break;
+    case OPCODE_FX65:
+        break;
+    default:
+        break;
+    }
+}
+
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
     uint16_t block = cpu_fetch(cpu, mem);
+    Opcode opcode = cpu_decode(cpu, block);
+    cpu_execute(cpu, mem, scrn, keyp, opcode);
 }

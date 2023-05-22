@@ -1,7 +1,19 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <unistd.h>
 
 #include "screen.h"
+
+void scrn_pixels_clear(Screen *scrn)
+{
+    for (int i = 0; i < SCREEN_WIDTH; i++)
+    {
+        for (int j = 0; j < SCREEN_HEIGHT; j++)
+        {
+            scrn->pixels[i][j] = false;
+        }
+    }
+}
 
 Screen *scrn_new()
 {
@@ -28,6 +40,7 @@ Screen *scrn_new()
     Screen *scrn = malloc(sizeof(Screen));
     scrn->window = window;
     scrn->surface = surface;
+    scrn_pixels_clear(scrn);
     return scrn;
 }
 
@@ -35,4 +48,38 @@ void scrn_free(Screen *scrn)
 {
     SDL_DestroyWindow(scrn->window);
     free(scrn);
+}
+
+void scrn_clear(Screen *scrn)
+{
+    SDL_Surface *surface = scrn->surface;
+    SDL_FillRect(surface, NULL, SDL_MapRGBA(surface->format, COLOR_OFF));
+    scrn_pixels_clear(scrn);
+    SDL_UpdateWindowSurface(scrn->window);
+}
+
+bool scrn_get_px(Screen *scrn, size_t x, size_t y)
+{
+    return scrn->pixels[x][y];
+}
+
+void scrn_draw_px(Screen *scrn, size_t x, size_t y, bool is_on)
+{
+    scrn->pixels[x][y] = is_on;
+    x *= SCREEN_PX_SIZE;
+    y *= SCREEN_PX_SIZE;
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    rect.w = SCREEN_PX_SIZE;
+    rect.h = SCREEN_PX_SIZE;
+    if (is_on)
+    {
+        SDL_FillRect(scrn->surface, &rect, SDL_MapRGBA(scrn->surface->format, COLOR_ON));
+    }
+    else
+    {
+        SDL_FillRect(scrn->surface, &rect, SDL_MapRGBA(scrn->surface->format, COLOR_OFF));
+    }
+    SDL_UpdateWindowSurface(scrn->window);
 }
