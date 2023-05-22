@@ -14,16 +14,6 @@ void scrn_pixels_clear(Screen *scrn)
     }
 }
 
-bool **scrn_pixels_init()
-{
-    bool **pixels = calloc(SCREEN_WIDTH, sizeof(bool *));
-    for (int i = 0; i < SCREEN_WIDTH; i++)
-    {
-        pixels[i] = (bool *)calloc(SCREEN_HEIGHT, sizeof(bool));
-    }
-    return pixels;
-}
-
 Screen *scrn_new()
 {
 
@@ -49,7 +39,6 @@ Screen *scrn_new()
     Screen *scrn = malloc(sizeof(Screen));
     scrn->window = window;
     scrn->surface = surface;
-    scrn->pixels = scrn_pixels_init();
     scrn_pixels_clear(scrn);
     return scrn;
 }
@@ -57,11 +46,6 @@ Screen *scrn_new()
 void scrn_free(Screen *scrn)
 {
     SDL_DestroyWindow(scrn->window);
-    for (int i = 0; i < SCREEN_WIDTH; i++)
-    {
-        free(scrn->pixels[i]);
-    }
-    free(scrn->pixels);
     free(scrn);
 }
 

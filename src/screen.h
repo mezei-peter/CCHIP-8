@@ -13,7 +13,7 @@ typedef struct Screen
 {
     SDL_Window *window;
     SDL_Surface *surface;
-    bool **pixels;
+    bool pixels[SCREEN_WIDTH][SCREEN_HEIGHT];
 } Screen;
 
 Screen *scrn_new();
