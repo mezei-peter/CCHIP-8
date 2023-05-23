@@ -432,8 +432,16 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu_draw(cpu, mem, scrn);
         break;
     case OPCODE_EX9E:
+        if (keyp->keys[cpu->var_regs[cpu->x]].pressed)
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_EXA1:
+        if (!keyp->keys[cpu->var_regs[cpu->x]].pressed)
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_FX07:
         cpu->var_regs[cpu->x] = cpu->dly_tmr;
