@@ -466,8 +466,18 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu_bcd_convert(cpu, mem);
         break;
     case OPCODE_FX55:
+        // Using modern memory storage
+        for (int i = 0; i <= cpu->x; i++)
+        {
+            mem_set_heap(mem, cpu->idx_reg + i, cpu->var_regs[i]);
+        }
         break;
     case OPCODE_FX65:
+        // Using modern memory loading
+        for (int i = 0; i <= cpu->x; i++)
+        {
+            cpu->var_regs[i] = mem_get_heap(mem, cpu->idx_reg + i);
+        }
         break;
     default:
         break;
