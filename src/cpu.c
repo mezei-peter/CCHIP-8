@@ -293,6 +293,18 @@ void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
     }
 }
 
+void cpu_bcd_convert(Cpu *cpu, Memory *mem)
+{
+    uint8_t num = cpu->var_regs[cpu->x];
+    uint8_t dig_3 = num % 10;
+    num /= 10;
+    uint8_t dig_2 = num % 10;
+    uint8_t dig_1 = num / 10;
+    mem_set_heap(mem, cpu->idx_reg, dig_1);
+    mem_set_heap(mem, cpu->idx_reg + 1, dig_2);
+    mem_set_heap(mem, cpu->idx_reg + 2, dig_3);
+}
+
 void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
 {
     uint8_t a_res;
@@ -451,6 +463,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->idx_reg = FONTS_ADDR + (cpu->var_regs[cpu->x] * FONT_SIZE);
         break;
     case OPCODE_FX33:
+        cpu_bcd_convert(cpu, mem);
         break;
     case OPCODE_FX55:
         break;
