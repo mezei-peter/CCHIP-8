@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include "cpu.h"
 
@@ -406,8 +407,13 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->idx_reg = cpu->nnn;
         break;
     case OPCODE_BNNN:
+        // Using classic jump with offset
+        cpu->pc = cpu->nnn + (uint16_t)cpu->var_regs[0];
         break;
     case OPCODE_CXNN:
+        srand(time(NULL));
+        uint8_t r = rand() % 256;
+        cpu->var_regs[cpu->x] = r & cpu->nn;
         break;
     case OPCODE_DXYN:
         cpu_draw(cpu, mem, scrn);
