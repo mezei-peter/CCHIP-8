@@ -65,6 +65,7 @@ typedef struct Cpu
     uint8_t n;
     uint8_t nn;
     uint16_t nnn;
+    uint8_t key;
 } Cpu;
 
 Cpu *cpu_new();

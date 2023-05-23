@@ -21,7 +21,7 @@ void sys_free(System *sys)
     free(sys);
 }
 
-bool sys_quit_event(System *sys)
+bool handle_input(System *sys)
 {
     SDL_Event event;
     while (SDL_PollEvent(&event))
@@ -31,10 +31,14 @@ bool sys_quit_event(System *sys)
         case SDL_QUIT:
             return true;
         case SDL_KEYDOWN:
+            keyp_press_key(sys->keypad, event.key.keysym.scancode, true);
             if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE)
             {
                 return true;
             }
+            break;
+        case SDL_KEYUP:
+            keyp_press_key(sys->keypad, event.key.keysym.scancode, false);
         default:
             break;
         }
@@ -52,7 +56,7 @@ int sys_run_bin(System *sys, BinaryFile *bin)
     while (running)
     {
         cpu_cycle(sys->cpu, sys->memory, sys->screen, sys->keypad);
-        running = !sys_quit_event(sys);
+        running = !handle_input(sys);
     }
     return 0;
 }
