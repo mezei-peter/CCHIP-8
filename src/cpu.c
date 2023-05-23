@@ -322,7 +322,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->pc = cpu->nnn;
         break;
     case OPCODE_2NNN:
-        mem_set_stack(mem, cpu->sp++, cpu->pc);
+        mem_set_stack(mem, ++cpu->sp, cpu->pc);
         cpu->pc = cpu->nnn;
         break;
     case OPCODE_3XNN:
