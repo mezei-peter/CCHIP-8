@@ -336,22 +336,65 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->var_regs[cpu->x] += cpu->nn;
         break;
     case OPCODE_8XY0:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY1:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] | cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY2:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] & cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY3:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] ^ cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY4:
+        uint8_t result = (uint8_t)cpu->var_regs[cpu->x] + (uint8_t)cpu->var_regs[cpu->y];
+        if (result < cpu->var_regs[cpu->x])
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
+        cpu->var_regs[cpu->x] = result;
         break;
     case OPCODE_8XY5:
+        uint8_t result = (uint8_t)cpu->var_regs[cpu->x] - (uint8_t)cpu->var_regs[cpu->y];
+        if (result > cpu->var_regs[cpu->x])
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        cpu->var_regs[cpu->x] = result;
         break;
     case OPCODE_8XY6:
+        // Using modern shift
+        uint8_t lsb = cpu->var_regs[cpu->x] & 0x01;
+        cpu->var_regs[VAR_REG_COUNT - 1] = lsb;
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] >> 1;
+
         break;
     case OPCODE_8XY7:
+        uint8_t result = (uint8_t)cpu->var_regs[cpu->y] - (uint8_t)cpu->var_regs[cpu->x];
+        if (result > cpu->var_regs[cpu->y])
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        cpu->var_regs[cpu->x] = result;
         break;
     case OPCODE_8XYE:
+        // Using modern shift
+        uint8_t msb = (cpu->var_regs[cpu->x] & 0x80) >> 7;
+        cpu->var_regs[VAR_REG_COUNT - 1] = lsb;
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] << 1;
         break;
     case OPCODE_9XY0:
         if (cpu->var_regs[cpu->x] != cpu->var_regs[cpu->y])
