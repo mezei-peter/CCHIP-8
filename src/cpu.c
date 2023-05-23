@@ -300,6 +300,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         scrn_clear(scrn);
         break;
     case OPCODE_00EE:
+        cpu->pc = mem_get_stack(mem, cpu->sp--);
         break;
     case OPCODE_0NNN:
         break;
@@ -307,6 +308,8 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->pc = cpu->nnn;
         break;
     case OPCODE_2NNN:
+        mem_set_stack(mem, cpu->sp++, cpu->pc);
+        cpu->pc = cpu->nnn;
         break;
     case OPCODE_3XNN:
         break;
