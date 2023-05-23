@@ -307,7 +307,7 @@ void cpu_bcd_convert(Cpu *cpu, Memory *mem)
 
 void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
 {
-    uint8_t a_res;
+    bool overflow;
     switch (opcode)
     {
     case OPCODE_00E0:
@@ -362,8 +362,9 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] ^ cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY4:
-        a_res = (uint8_t)cpu->var_regs[cpu->x] + (uint8_t)cpu->var_regs[cpu->y];
-        if (a_res < cpu->var_regs[cpu->x])
+        overflow = ((uint16_t)cpu->var_regs[cpu->x] + (uint16_t)cpu->var_regs[cpu->y]) > 0xFF;
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->x] + (uint8_t)cpu->var_regs[cpu->y];
+        if (overflow)
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 1;
         }
@@ -371,11 +372,11 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 0;
         }
-        cpu->var_regs[cpu->x] = a_res;
         break;
     case OPCODE_8XY5:
-        a_res = (uint8_t)cpu->var_regs[cpu->x] - (uint8_t)cpu->var_regs[cpu->y];
-        if (a_res > cpu->var_regs[cpu->x])
+        overflow = cpu->var_regs[cpu->x] < cpu->var_regs[cpu->y];
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->x] - (uint8_t)cpu->var_regs[cpu->y];
+        if (overflow)
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 0;
         }
@@ -383,18 +384,18 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 1;
         }
-        cpu->var_regs[cpu->x] = a_res;
         break;
     case OPCODE_8XY6:
         // Using modern shift
         uint8_t lsb = cpu->var_regs[cpu->x] & 0x01;
-        cpu->var_regs[VAR_REG_COUNT - 1] = lsb;
         cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] >> 1;
+        cpu->var_regs[VAR_REG_COUNT - 1] = lsb;
 
         break;
     case OPCODE_8XY7:
-        a_res = (uint8_t)cpu->var_regs[cpu->y] - (uint8_t)cpu->var_regs[cpu->x];
-        if (a_res > cpu->var_regs[cpu->y])
+        overflow = cpu->var_regs[cpu->y] < cpu->var_regs[cpu->x];
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->y] - (uint8_t)cpu->var_regs[cpu->x];
+        if (overflow)
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 0;
         }
@@ -402,13 +403,12 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         {
             cpu->var_regs[VAR_REG_COUNT - 1] = 1;
         }
-        cpu->var_regs[cpu->x] = a_res;
         break;
     case OPCODE_8XYE:
         // Using modern shift
         uint8_t msb = (cpu->var_regs[cpu->x] & 0x80) >> 7;
-        cpu->var_regs[VAR_REG_COUNT - 1] = msb;
         cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] << 1;
+        cpu->var_regs[VAR_REG_COUNT - 1] = msb;
         break;
     case OPCODE_9XY0:
         if (cpu->var_regs[cpu->x] != cpu->var_regs[cpu->y])
