@@ -447,6 +447,17 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->var_regs[cpu->x] = cpu->dly_tmr;
         break;
     case OPCODE_FX0A:
+        uint8_t pressed_key = keyp_get_pressed_key(keyp);
+        if (pressed_key > 0xF)
+        {
+            cpu->key = pressed_key;
+            if (!keyp->keys[cpu->key].pressed)
+            {
+                cpu->var_regs[cpu->x] = cpu->key;
+                break;
+            }
+        }
+        cpu->pc -= 2;
         break;
     case OPCODE_FX15:
         cpu->dly_tmr = cpu->var_regs[cpu->x];

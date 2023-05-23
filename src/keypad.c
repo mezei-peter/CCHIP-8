@@ -89,3 +89,15 @@ void keyp_press_key(Keypad *keyp, SDL_Scancode scancode, bool is_pressed)
         break;
     }
 }
+
+uint8_t keyp_get_pressed_key(Keypad *keyp)
+{
+    for (int i = 0; i < 16; i++)
+    {
+        if (keyp->keys[i].pressed)
+        {
+            return (uint8_t)i;
+        }
+    }
+    return 0xFF;
+}
