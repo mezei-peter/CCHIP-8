@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <time.h>
 
 #include "cpu.h"
 
@@ -292,14 +293,28 @@ void cpu_draw(Cpu *cpu, Memory *mem, Screen *scrn)
     }
 }
 
+void cpu_bcd_convert(Cpu *cpu, Memory *mem)
+{
+    uint8_t num = cpu->var_regs[cpu->x];
+    uint8_t dig_3 = num % 10;
+    num /= 10;
+    uint8_t dig_2 = num % 10;
+    uint8_t dig_1 = num / 10;
+    mem_set_heap(mem, cpu->idx_reg, dig_1);
+    mem_set_heap(mem, cpu->idx_reg + 1, dig_2);
+    mem_set_heap(mem, cpu->idx_reg + 2, dig_3);
+}
+
 void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcode)
 {
+    bool overflow;
     switch (opcode)
     {
     case OPCODE_00E0:
         scrn_clear(scrn);
         break;
     case OPCODE_00EE:
+        cpu->pc = mem_get_stack(mem, cpu->sp--);
         break;
     case OPCODE_0NNN:
         break;
@@ -307,12 +322,26 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->pc = cpu->nnn;
         break;
     case OPCODE_2NNN:
+        mem_set_stack(mem, ++cpu->sp, cpu->pc);
+        cpu->pc = cpu->nnn;
         break;
     case OPCODE_3XNN:
+        if (cpu->nn == cpu->var_regs[cpu->x])
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_4XNN:
+        if (cpu->nn != cpu->var_regs[cpu->x])
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_5XY0:
+        if (cpu->var_regs[cpu->x] == cpu->var_regs[cpu->y])
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_6XNN:
         cpu->var_regs[cpu->x] = cpu->nn;
@@ -321,31 +350,83 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
         cpu->var_regs[cpu->x] += cpu->nn;
         break;
     case OPCODE_8XY0:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY1:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] | cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY2:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] & cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY3:
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] ^ cpu->var_regs[cpu->y];
         break;
     case OPCODE_8XY4:
+        overflow = ((uint16_t)cpu->var_regs[cpu->x] + (uint16_t)cpu->var_regs[cpu->y]) > 0xFF;
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->x] + (uint8_t)cpu->var_regs[cpu->y];
+        if (overflow)
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
         break;
     case OPCODE_8XY5:
+        overflow = cpu->var_regs[cpu->x] < cpu->var_regs[cpu->y];
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->x] - (uint8_t)cpu->var_regs[cpu->y];
+        if (overflow)
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
         break;
     case OPCODE_8XY6:
+        // Using modern shift
+        uint8_t lsb = cpu->var_regs[cpu->x] & 0x01;
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] >> 1;
+        cpu->var_regs[VAR_REG_COUNT - 1] = lsb;
+
         break;
     case OPCODE_8XY7:
+        overflow = cpu->var_regs[cpu->y] < cpu->var_regs[cpu->x];
+        cpu->var_regs[cpu->x] = (uint8_t)cpu->var_regs[cpu->y] - (uint8_t)cpu->var_regs[cpu->x];
+        if (overflow)
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
         break;
     case OPCODE_8XYE:
+        // Using modern shift
+        uint8_t msb = (cpu->var_regs[cpu->x] & 0x80) >> 7;
+        cpu->var_regs[cpu->x] = cpu->var_regs[cpu->x] << 1;
+        cpu->var_regs[VAR_REG_COUNT - 1] = msb;
         break;
     case OPCODE_9XY0:
+        if (cpu->var_regs[cpu->x] != cpu->var_regs[cpu->y])
+        {
+            cpu->pc += 2;
+        }
         break;
     case OPCODE_ANNN:
         cpu->idx_reg = cpu->nnn;
         break;
     case OPCODE_BNNN:
+        // Using classic jump with offset
+        cpu->pc = cpu->nnn + (uint16_t)cpu->var_regs[0];
         break;
     case OPCODE_CXNN:
+        srand(time(NULL));
+        uint8_t r = rand() % 256;
+        cpu->var_regs[cpu->x] = r & cpu->nn;
         break;
     case OPCODE_DXYN:
         cpu_draw(cpu, mem, scrn);
@@ -355,22 +436,48 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_EXA1:
         break;
     case OPCODE_FX07:
+        cpu->var_regs[cpu->x] = cpu->dly_tmr;
         break;
     case OPCODE_FX0A:
         break;
     case OPCODE_FX15:
+        cpu->dly_tmr = cpu->var_regs[cpu->x];
         break;
     case OPCODE_FX18:
+        cpu->snd_tmr = cpu->var_regs[cpu->x];
         break;
     case OPCODE_FX1E:
+        // Using modern index addition
+        cpu->idx_reg += (uint16_t)cpu->var_regs[cpu->x];
+        if (cpu->idx_reg > MAX_INDEX)
+        {
+            cpu->idx_reg %= MAX_INDEX;
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
         break;
     case OPCODE_FX29:
+        cpu->idx_reg = FONTS_ADDR + (cpu->var_regs[cpu->x] * FONT_SIZE);
         break;
     case OPCODE_FX33:
+        cpu_bcd_convert(cpu, mem);
         break;
     case OPCODE_FX55:
+        // Using modern memory storage
+        for (int i = 0; i <= cpu->x; i++)
+        {
+            mem_set_heap(mem, cpu->idx_reg + i, cpu->var_regs[i]);
+        }
         break;
     case OPCODE_FX65:
+        // Using modern memory loading
+        for (int i = 0; i <= cpu->x; i++)
+        {
+            cpu->var_regs[i] = mem_get_heap(mem, cpu->idx_reg + i);
+        }
         break;
     default:
         break;
