@@ -423,16 +423,31 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     case OPCODE_EXA1:
         break;
     case OPCODE_FX07:
+        cpu->var_regs[cpu->x] = cpu->dly_tmr;
         break;
     case OPCODE_FX0A:
         break;
     case OPCODE_FX15:
+        cpu->dly_tmr = cpu->var_regs[cpu->x];
         break;
     case OPCODE_FX18:
+        cpu->snd_tmr = cpu->var_regs[cpu->x];
         break;
     case OPCODE_FX1E:
+        // Using modern index addition
+        cpu->idx_reg += (uint16_t)cpu->var_regs[cpu->x];
+        if (cpu->idx_reg > MAX_INDEX)
+        {
+            cpu->idx_reg %= MAX_INDEX;
+            cpu->var_regs[VAR_REG_COUNT - 1] = 1;
+        }
+        else
+        {
+            cpu->var_regs[VAR_REG_COUNT - 1] = 0;
+        }
         break;
     case OPCODE_FX29:
+        cpu->idx_reg = FONTS_ADDR + (cpu->var_regs[cpu->x] * FONT_SIZE);
         break;
     case OPCODE_FX33:
         break;

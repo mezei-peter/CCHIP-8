@@ -10,6 +10,7 @@
 #define FONTS_ADDR 0x050
 #define FONT_SIZE 5
 #define VAR_REG_COUNT 16
+#define MAX_INDEX 0x0FFF
 
 typedef enum
 {
