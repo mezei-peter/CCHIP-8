@@ -19,3 +19,9 @@ The program can be built and run with **make**. It requires a .ch8 **file path**
 make
 make run ARGS=roms/1-chip8-logo.ch8
 ```
+
+I included a version of Pong. The frame rate is not controlled yet, so it might run too quickly. Control with the **1, Q** and the **4, R** keys.
+```
+make
+make run ARGS=roms/Pong-Paul_Vervalin-1990.ch8
+```
