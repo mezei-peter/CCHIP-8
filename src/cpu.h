@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stdint.h>
+#include <time.h>
 #include "memory.h"
 #include "screen.h"
 #include "keypad.h"
@@ -66,6 +67,8 @@ typedef struct Cpu
     uint8_t nn;
     uint16_t nnn;
     uint8_t key;
+    int clock;
+
 } Cpu;
 
 Cpu *cpu_new();

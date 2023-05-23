@@ -1,6 +1,4 @@
 #include <stdlib.h>
-#include <time.h>
-
 #include "cpu.h"
 
 Cpu *cpu_new()
@@ -20,6 +18,7 @@ Cpu *cpu_new()
     {
         cpu->var_regs[i] = 0;
     }
+    cpu->clock = clock();
     return cpu;
 }
 
@@ -505,6 +504,18 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
 
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
+    if ((double)clock() - (double)cpu->clock > 1 / 60)
+    {
+        if (cpu->dly_tmr > 0)
+        {
+            cpu->dly_tmr--;
+        }
+        if (cpu->snd_tmr > 0)
+        {
+            cpu->snd_tmr--;
+        }
+        cpu->clock = clock();
+    }
     uint16_t block = cpu_fetch(cpu, mem);
     Opcode opcode = cpu_decode(cpu, block);
     cpu_execute(cpu, mem, scrn, keyp, opcode);
