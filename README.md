@@ -17,7 +17,7 @@ CHIP-8 is an interpreted programming language. It is compiled into binary .ch8 f
 - ANNN - Set the index register(16-bit register) to NNN(12-bit memory address)
 - DXYN - Draw to the screen an N byte long(N pixel tall) sprite starting from the memory address stored in the index register(16-bit register) at coordinates stored by the xth and yth variable registers(8-bit registers). The screen is 64*32 pixels, so the coordinates fit in 1 byte each.
 
-Currently, the main part of the emulator is finished and it runs programs. However, the frame rate is not controlled yet, so games will run at different speeds on different systems.
+Currently, the main part of the emulator is finished and it runs programs. However, the frame rate is not controlled correctly yet, so some games might run too quickly or too slowly.
 
 ## Demo
 
@@ -46,7 +46,7 @@ make
 make run ARGS=roms/1-chip8-logo.ch8
 ```
 
-I included a version of Pong. The frame rate is not controlled yet, so it might run too quickly. Control with the **1, Q** and the **4, R** keys.
+I included a version of Pong. Control with the **1, Q** and the **4, R** keys.
 ```
 make
 make run ARGS=roms/Pong-Paul_Vervalin-1990.ch8
