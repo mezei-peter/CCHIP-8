@@ -502,6 +502,7 @@ void cpu_execute(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp, Opcode opcod
     }
 }
 
+static int last_time = 0;
 void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
 {
     if ((double)clock() - (double)cpu->clock > 1 / 60)
@@ -516,6 +517,14 @@ void cpu_cycle(Cpu *cpu, Memory *mem, Screen *scrn, Keypad *keyp)
         }
         cpu->clock = clock();
     }
+
+    int time_to_wait = FRAME_TARGET_TIME - (SDL_GetTicks64() - last_time);
+    if (time_to_wait > 0 && time_to_wait <= FRAME_TARGET_TIME)
+    {
+        SDL_Delay(time_to_wait);
+    }
+    last_time = SDL_GetTicks64();
+
     uint16_t block = cpu_fetch(cpu, mem);
     Opcode opcode = cpu_decode(cpu, block);
     cpu_execute(cpu, mem, scrn, keyp, opcode);

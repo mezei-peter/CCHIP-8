@@ -12,6 +12,8 @@
 #define FONT_SIZE 5
 #define VAR_REG_COUNT 16
 #define MAX_INDEX 0x0FFF
+#define FRAMES_PER_SEC 600
+#define FRAME_TARGET_TIME (1000 / FRAMES_PER_SEC)
 
 typedef enum
 {
