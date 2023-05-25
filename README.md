@@ -51,3 +51,21 @@ I included a version of Pong. Control with the **1, Q** and the **4, R** keys.
 make
 make run ARGS=roms/Pong-Paul_Vervalin-1990.ch8
 ```
+
+## Controls
+The original keypad looks like this: 
+```
+1 2 3 C
+4 5 6 D
+7 8 9 E
+A 0 B F
+```
+
+It is mapped to this on a QWERTY keyboard:
+```
+1 2 3 4
+Q W E R
+A S D F
+Z X C V
+```
+If you use a QWERTZ keyboard, you can use Y instead of Z, since the keyboard is mapped based on scancodes. It even works on an AZERTY layout.
